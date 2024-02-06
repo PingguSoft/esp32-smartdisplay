@@ -249,8 +249,15 @@ void smartdisplay_init()
   disp_drv.ver_res = LCD_HEIGHT;
   // Create drawBuffer
   disp_drv.draw_buf = (lv_disp_draw_buf_t *)malloc(sizeof(lv_disp_draw_buf_t));
+
+#if BOARD_HAS_PSRAM
+  uint drawBufferPixels = LCD_WIDTH * LCD_HEIGHT;
+  void *drawBuffer = heap_caps_malloc(sizeof(lv_color16_t) * drawBufferPixels, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
+#else
   uint drawBufferPixels = LCD_WIDTH * LVGL_PIXEL_BUFFER_LINES;
   void *drawBuffer = heap_caps_malloc(sizeof(lv_color16_t) * drawBufferPixels, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT);
+#endif
+
   lv_disp_draw_buf_init(disp_drv.draw_buf, drawBuffer, NULL, drawBufferPixels);
   // Initialize specific driver
   lvgl_lcd_init(&disp_drv);
