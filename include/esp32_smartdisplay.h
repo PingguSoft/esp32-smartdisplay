@@ -36,6 +36,9 @@ extern "C"
     // Touch calibration
     extern touch_calibration_data_t touch_calibration_data;
     touch_calibration_data_t smartdisplay_compute_touch_calibration(const lv_point_t screen[3], const lv_point_t touch[3]);
+
+    typedef void (*touch_cb_t)(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
+    void smartdisplay_set_touch_cb(touch_cb_t cb);
 #endif    
     // Set the brightness of the backlight display
     void smartdisplay_lcd_set_backlight(float duty); // [0, 1]

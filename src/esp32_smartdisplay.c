@@ -20,6 +20,7 @@ lv_timer_t *update_brightness_timer;
 #ifdef BOARD_HAS_TOUCH
 touch_calibration_data_t touch_calibration_data;
 void (*driver_touch_read_cb)(struct _lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
+touch_cb_t ext_touch_cb = NULL;
 #endif
 
 #if LV_USE_LOG
@@ -167,11 +168,20 @@ void smartdisplay_led_set_rgb(bool r, bool g, bool b)
 #endif
 
 #ifdef BOARD_HAS_TOUCH
+void smartdisplay_set_touch_cb(touch_cb_t cb)
+{
+    ext_touch_cb = cb;
+}
+
 // See: https://www.maximintegrated.com/en/design/technical-documents/app-notes/5/5296.html
 void lvgl_touch_calibration_transform(lv_indev_drv_t *drv, lv_indev_data_t *data)
 {
   // Call low level read from the driver
   driver_touch_read_cb(drv, data);
+
+  if (ext_touch_cb && data->state == LV_INDEV_STATE_PRESSED)
+      ext_touch_cb(drv, data);
+
   // Check if transformation is required
   if (touch_calibration_data.valid && data->state == LV_INDEV_STATE_PRESSED)
   {
