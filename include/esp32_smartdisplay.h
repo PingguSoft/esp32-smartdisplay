@@ -6,8 +6,12 @@
 
 // Use last PWM_CHANNEL for backlight
 #define PWM_CHANNEL_BCKL (SOC_LEDC_CHANNEL_NUM - 1)
+#ifndef PWM_FREQ_BCKL
 #define PWM_FREQ_BCKL 20000
+#endif
+#ifndef PWM_BITS_BCKL
 #define PWM_BITS_BCKL 8
+#endif
 #define PWM_MAX_BCKL ((1 << PWM_BITS_BCKL) - 1)
 
 // Exported functions
@@ -36,7 +40,7 @@ extern "C"
 
     typedef void (*touch_cb_t)(struct _lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
     void smartdisplay_set_touch_cb(touch_cb_t cb);
-#endif    
+#endif
     // Set the brightness of the backlight display
     void smartdisplay_lcd_set_backlight(float duty); // [0, 1]
     // Set the adaptive brightness callback
